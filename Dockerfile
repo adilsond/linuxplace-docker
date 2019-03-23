@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:buster-slim
 LABEL mantainer=fams@linuxplace.com.br
 COPY ./Docker/ /var/www/html
 EXPOSE 80
