@@ -43,7 +43,8 @@ template: conteudo
 # Iniciando containers intergrados
 ```bash
 $ docker network create curso
-$ docker run -d --network curso --name redis redis -v ./redis-data:/data
+$ docker run -d --network curso --name redis -v ./redis-data:/data redis
+$ docker build -t contador github.com/fams/contador-sessao.git
 $ docker run -d --network curso --name contador -p 5000:5000 contador
 ```
 
@@ -278,11 +279,25 @@ template: conteudo
  - Implementado pelo daemon
  - --net-alias <ALIAS>
 
+
+
 ---
 # LAB DNS RR
 - Criar dois containers NGINX com o mesmo net-alias
 - Executar um container BASH e testar a resolução de nomes
 
+--
+```bash
+$ docker run --net-alias nginx --name nginx01 -d nginx:latest
+$ docker run --net-alias nginx --name nginx02 -d nginx:latest
+```
+```
+--
+```bash
+$ docker network create --driver bridge curso_net
+$ docker run --net-alias nginx --name nginx01 --network curso_net -d nginx:latest
+$ docker run --net-alias nginx --name nginx02 --network curso_net  -d nginx:latest
+```
 ---
 # Network More
 
@@ -297,27 +312,27 @@ template: conteudo
 # CNM
 
 .full-image-height[![Container Network Model][cnm]]
-[cnm]: /img/cnm.png "Container Network Model"
+[cnm]: img/cnm.png "Container Network Model"
 
 ---
 #Host Driver
 .full-image-height[![Host Networkl][host-driver]]
-[host-driver]: /img/host-driver.png "Host Driver"
+[host-driver]: img/host-driver.png "Host Driver"
 
 ---
 # Bridge
 .full-image-height[![Bridge Networkl][bridge-driver]]
-[bridge-driver]: /img/bridge-driver.png "Bridge Driver"
+[bridge-driver]: img/bridge-driver.png "Bridge Driver"
 
 ---
 # Bridge
 .full-image-height[![Bridge Networkl][bridge2]]
-[bridge2]: /img/bridge2.png "Bridge Driver"
+[bridge2]: img/bridge2.png "Bridge Driver"
 
 ---
 # Acesso Externo
 .full-image[![External Access][nat]]
-[nat]: /img/nat.png "External Access"
+[nat]: img/nat.png "External Access"
 
 ---
 
@@ -398,6 +413,14 @@ a6af0cd8ec20        46 hours ago        /bin/sh -c apt-get update -y && apt-get 
 [overlay]: img/overlay_constructs.jpg "Overlay"
 
 ---
+#Overlay FS DIY
+```bash
+$ sudo su -
+# mkdir /mnt/{merged,upper,lower,workdir}
+# mount -t overlay overlay2 -o lowerdir=/mnt/lower/,upperdir=/mnt/uper/, \
+  workdir=/mnt/workdir/ /mnt/merged/
+$ cd /mnt/merged
+```
 
 #Volumes
 - Volumes não são camadas!
@@ -471,3 +494,45 @@ docker volume create <volume_name> \
 ```
 
 ---
+
+template: splash
+
+# Docker Security
+### Security By Default
+
+---
+template: conteudo
+# Proteção por camadas
+- Namespaces
+- Cgroups
+- Capabilities
+- LSM
+- SecComp
+
+---
+# Namespaces
+- usermap not default
+```bash
+$
+```
+
+---
+# Capabilities
+
+    "CAP_CHOWN",
+    "CAP_DAC_OVERRIDE",
+    "CAP_FSETID",
+    "CAP_FOWNER",
+    "CAP_MKNOD",
+    "CAP_NET_RAW",
+    "CAP_SETGID",
+    "CAP_SETUID",
+    "CAP_SETFCAP",
+    "CAP_SETPCAP",
+    "CAP_NET_BIND_SERVICE",
+    "CAP_SYS_CHROOT",
+    "CAP_KILL",
+    "CAP_AUDIT_WRITE"
+
+---
+
